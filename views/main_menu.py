@@ -1,27 +1,42 @@
-from datetime import datetime
 from controllers.user_controller import UserController
-from repositories.user_repository import UserRepository
 from views.base_menu import BaseMenu
-import bcrypt
 
 class MainMenu(BaseMenu):
+
     def __init__(self, user):
         self.logged_user = user
 
-        print(f"\nBejelentkezve: {self.logged_user.username} / ({self.logged_user.role})")
-
     def show(self):
-        menu = {
+
+        if self.logged_user.role == "admin":
+            menu = self.admin_menu()
+        else:
+            menu = self.user_menu()
+
+        self.run(menu, "FŐMENÜ")
+        return True
+
+    def admin_menu(self):
+        return {
             "1": ("Új felhasználó hozzáadása", self.add_user),
             "2": ("Felhasználók listázása", self.get_users),
             "3": ("Felhasználó keresése", self.get_user),
-            "4": ("Felhasználó adatainak módosítása", self.edit_user),
+            "4": ("Felhasználó módosítása", self.edit_user),
             "5": ("Felhasználó törlése", self.delete_user),
             "6": ("Jelszómódosítás", self.reset_password),
+            "7": ("Logout", self.logout),
             "0": ("Kilépés", self.exit_app)
         }
 
-        self.run(menu, "FŐMENÜ")
+    def user_menu(self):
+        return {
+            "1": ("Saját adatok megtekintése", self.my_profile),
+            "2": ("Saját adatok módosítása", self.edit_my_profile),
+            "3": ("Jelszómódosítás", self.reset_password),
+            "4": ("Logout", self.logout),
+            "0": ("Kilépés", self.exit_app)
+        }
+
 
     def add_user(self):
         name = input("Név: ")
@@ -135,3 +150,30 @@ class MainMenu(BaseMenu):
         success, message = UserController.reset_password(user, current_password, new_password, new_password_again)
         print(message)
 
+    def logout(self):
+        print("Sikeres kijelentkezés.")
+        return
+
+    def my_profile(self):
+        user = self.logged_user
+
+        print("\n--- Saját adatok ---")
+        print(f"Név: {user.name}")
+        print(f"Email: {user.email}")
+        print(f"Felhasználónév: {user.username}")
+        print(f"Szerepkör: {user.role}")
+
+    def edit_my_profile(self):
+        user = self.logged_user
+
+        name = input(f"Név [{user.name}]: ").strip()
+        email = input(f"Email [{user.email}]: ").strip()
+
+        UserController.update_user(
+            user,
+            name or user.name,
+            email or user.email,
+            user.role
+        )
+
+        print("Adatok frissítve!")

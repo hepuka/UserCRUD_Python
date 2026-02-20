@@ -5,6 +5,7 @@ class BaseMenu:
     def run(self, menu: dict, title: str):
         while True:
             print(f"\n----- {title.upper()} -----")
+            print(f"Bejelentkezve: {self.logged_user.username} ({self.logged_user.role})\n")
 
             for key, (desc, _) in menu.items():
                 print(f"({key}) {desc}")
@@ -15,7 +16,10 @@ class BaseMenu:
             action = menu.get(choice)
 
             if action:
-                action[1]()
+                result = action[1]()
+
+                if choice in ["7", "4"]:  # logout opciók
+                    return
             else:
                 print("Érvénytelen menüpont!")
 
