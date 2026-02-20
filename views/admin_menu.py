@@ -13,7 +13,8 @@ class AdminMenu(BaseMenu):
         menu = {
             "1": ("Felhasználókezelő menü", self.navigate_to_userhandling_menu),
             "2": ("Termékmenü", self.navigate_to_product_menu),
-            "3": ("Logout", self.logout),
+            "3": ("Jelszómódosítás", self.reset_password),
+            "4": ("Logout", self.logout),
             "0": ("Kilépés", self.exit_app)
         }
 
