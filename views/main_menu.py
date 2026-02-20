@@ -1,4 +1,5 @@
 from datetime import datetime
+from controllers.user_controller import UserController
 from repositories.user_repository import UserRepository
 from views.base_menu import BaseMenu
 import bcrypt
@@ -25,23 +26,20 @@ class MainMenu(BaseMenu):
         password = input("Jelszó: ")
         tmp = input("Szerepkör: (1)user (2)admin:")
         role = "user" if tmp == "1" else "admin"
-        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-        user_data = {
+        UserController.create_user({
             "name": name,
             "email": email,
             "username": username,
-            "password": hashed,
-            "role": role,
-            "createdAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
+            "password": password,
+            "role": role
+        })
 
-        UserRepository.create_user(user_data)
-        print(f"Felhasználó sikeresen létrehozva. Név: {user_data['name']} ")
+        print("Felhasználó létrehozva!")
 
     def get_user(self):
         username = input("Add meg a felhasználónevet: ")
-        user = UserRepository.find_by_username(username)
+        user = UserController.get_user(username)
 
         if not user:
             print("Felhasználó nem található!")
@@ -56,7 +54,7 @@ class MainMenu(BaseMenu):
         print(f"Módosítva: {user.modifiedAt or '-'}")
 
     def get_users(self):
-        users = UserRepository.get_all()
+        users = UserController.get_all_users()
 
         if not users:
             print("\nNincs rögzített felhasználó!")
@@ -84,7 +82,7 @@ class MainMenu(BaseMenu):
 
     def edit_user(self):
         username = input("Add meg a felhasználónevet: ")
-        user = UserRepository.find_by_username(username)
+        user = UserController.get_user(username)
 
         if not user:
             print("Felhasználó nem található!")
@@ -103,32 +101,15 @@ class MainMenu(BaseMenu):
         elif role_tmp == "2":
             role = "admin"
 
-        updates = {}
-        if name:
-            updates["name"] = name
-        if email:
-            updates["email"] = email
-        if role:
-            updates["role"] = role
-
-        updates["username"] = user.username
-        updates["createdAt"] = user.createdAt
-        updates["modifiedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        UserRepository.update_user(user.username, updates)
+        UserController.update_user(user, name, email, role)
         print("A felhasználó adatai sikeresen módosítva!")
 
     def delete_user(self):
         username = input("Add meg a törlendő felhasználó felhasználónevét: ")
-        user = UserRepository.find_by_username(username)
-
-        if not user:
-            print("Nincs ilyen regisztrált felhasználó.")
-            return False
-
         tmp = input("Biztosan törölni szeretnéd a felhasználót? (I) Igen (N) Mégsem: ").lower()
+
         if tmp == "i":
-            UserRepository.delete_user(username)
+            UserController.delete_user(username)
             print("Felhasználó sikeresen törölve")
             return True
         else:
@@ -136,35 +117,17 @@ class MainMenu(BaseMenu):
             return False
 
     def reset_password(self):
-        user_tmp = input("Add meg a felhasználónevet: ")
-        user = UserRepository.find_by_username(user_tmp)
+        username = input("Add meg a felhasználónevet: ")
+        user = UserController.get_user(username)
 
         if not user:
             print("Felhasználó nem található!")
             return
 
         current_password = input("Add meg a jelenlegi jelszavad: ")
-
-        if not bcrypt.checkpw(current_password.encode(), user.password.encode()):
-            print("Helytelen jelszó!")
-            return
-
         new_password = input("Add meg az új jelszavad: ")
-        new_password_again = input("Add meg az újra az új jelszavad: ")
+        new_password_again = input("Add meg ismét az új jelszavad: ")
 
-        if new_password != new_password_again:
-            print("A megadott jelszavak nem egyeznek!")
-            return
+        success, message = UserController.reset_password(user, current_password, new_password, new_password_again)
+        print(message)
 
-        new_hashed_password = bcrypt.hashpw(
-            new_password.encode(),
-            bcrypt.gensalt()
-        ).decode()
-
-        updates = {
-            "password": new_hashed_password,
-            "modifiedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-
-        UserRepository.update_user(user.username, updates)
-        print("A felhasználó jelszava sikeresen módosítva!")

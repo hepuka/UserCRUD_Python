@@ -1,0 +1,3 @@
+View → Controller → Service → Repository
+
+MVC + Service layer architektúra
