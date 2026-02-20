@@ -5,7 +5,6 @@ class BaseMenu:
     def run(self, menu: dict, title: str):
         while True:
             print(f"\n----- {title.upper()} -----")
-            print(f"Bejelentkezve: {self.logged_user.username} ({self.logged_user.role})\n")
 
             for key, (desc, _) in menu.items():
                 print(f"({key}) {desc}")

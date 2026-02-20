@@ -6,6 +6,8 @@ class MainMenu(BaseMenu):
     def __init__(self, user):
         self.logged_user = user
 
+        print(f"Bejelentkezve: {user.name} ({user.role})\n")
+
     def show(self):
 
         if self.logged_user.role == "admin":
@@ -162,6 +164,9 @@ class MainMenu(BaseMenu):
         print(f"Email: {user.email}")
         print(f"Felhasználónév: {user.username}")
         print(f"Szerepkör: {user.role}")
+        print(f"Profil létrehozva: {user.createdAt}")
+        print(f"Profil módosítva: {user.modifiedAt}")
+
 
     def edit_my_profile(self):
         user = self.logged_user
