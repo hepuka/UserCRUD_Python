@@ -1,6 +1,7 @@
-from controllers.auth_controller import AuthController
-
 class LoginView:
+
+    def __init__(self, auth_controller):
+        self.auth_controller = auth_controller
 
     def show(self):
         while True:
@@ -9,7 +10,7 @@ class LoginView:
             username = input("Felhasználónév: ")
             password = input("Jelszó: ")
 
-            success, user, message = AuthController.login(username, password)
+            success, user, message = self.auth_controller.login(username, password)
 
             if success:
                 print(message)

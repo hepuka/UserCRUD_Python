@@ -1,7 +1,7 @@
-from services.auth_service import AuthService
-
 class AuthController:
 
-    @staticmethod
-    def login(username: str, password: str):
-        return AuthService.login(username, password)
+    def __init__(self, auth_service):
+        self.auth_service = auth_service
+
+    def login(self, username, password):
+        return self.auth_service.login(username, password)

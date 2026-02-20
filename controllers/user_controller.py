@@ -1,28 +1,27 @@
-from services.user_service import UserService
+from controllers.base_controller import BaseController
 
 
-class UserController:
+class UserController(BaseController):
 
-    @staticmethod
-    def create_user(data):
-        UserService.create_user(**data)
+    def __init__(self, service):
+        super().__init__(service)
 
-    @staticmethod
-    def get_user(username):
-        return UserService.get_user(username)
+    def create(self, data):
+        self.service.create(data)
 
-    @staticmethod
-    def get_all_users():
-        return UserService.get_all_users()
+    def get_user(self, username):
+        return self.service.get_by_field("username", username)
 
-    @staticmethod
-    def update_user(user, name, email, role):
-        UserService.update_user(user, name, email, role)
+    def update_user(self, user, name, email, role):
+        updates = {
+            "name": name or user.name,
+            "email": email or user.email,
+            "role": role or user.role
+        }
+        self.service.update("username", user.username, updates)
 
-    @staticmethod
-    def delete_user(username):
-        UserService.delete_user(username)
+        updated_user = self.get_user(user.username)
+        return updated_user
 
-    @staticmethod
-    def reset_password(user, current_password, new_password, new_password_again):
-        return UserService.reset_password(user, current_password, new_password, new_password_again)
+    def reset_password(self, user, current_password, new_password, new_password_again):
+        return self.service.reset_password(user, current_password, new_password, new_password_again)

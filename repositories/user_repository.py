@@ -1,29 +1,10 @@
-from config.database import users_collection
+from repositories.base_repository import BaseRepository
 from models.user_model import User
 
-class UserRepository:
+class UserRepository(BaseRepository):
 
-    @staticmethod
-    def get_all():
-        users = users_collection.find({}, {"_id": 0})
-        return [User(u) for u in users]
+    def __init__(self):
+        super().__init__("users", User)
 
-    @staticmethod
-    def find_by_username(username: str):
-        data = users_collection.find_one({"username": username}, {"_id": 0})
-        return User(data) if data else None
-
-    @staticmethod
-    def create_user(user_data: dict):
-        users_collection.insert_one(user_data)
-
-    @staticmethod
-    def update_user(username: str, updates: dict):
-        users_collection.update_one(
-            {"username": username},
-            {"$set": updates}
-        )
-
-    @staticmethod
-    def delete_user(username: str):
-        users_collection.delete_one({"username": username})
+    def find_by_username(self, username):
+        return self.find_by_field("username", username)
