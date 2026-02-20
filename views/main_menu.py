@@ -5,6 +5,10 @@ from views.base_menu import BaseMenu
 import bcrypt
 
 class MainMenu(BaseMenu):
+    def __init__(self, user):
+        self.logged_user = user
+
+        print(f"\nBejelentkezve: {self.logged_user.username} / ({self.logged_user.role})")
 
     def show(self):
         menu = {
