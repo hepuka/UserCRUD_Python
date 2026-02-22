@@ -88,7 +88,7 @@ class ProductView(BaseMenu):
             f"{'Módosítva'.ljust(20)}"
         )
 
-        print("-" * 120)
+        print("-" * 135)
 
         for product in products:
             print(
@@ -109,18 +109,15 @@ class ProductView(BaseMenu):
             print("Nincs találat!")
             return
 
-        print("\n--- TALÁLATOK ---")
+        print("\n--- RÖGZÍTETT TERMÉKEK ---")
 
         for product in products:
-            print("-" * 50)
             print(f"Név: {product.name}")
             print(f"Kategória: {product.category}")
             print(f"Ár: {product.price}")
             print(f"Kiszerelés: {product.packaging}")
             print(f"Létrehozva: {product.createdAt}")
-            print(f"Módosítva: {product.modifiedAt or '-'}")
-
-        print("-" * 50)
+            print(f"Módosítva: {product.modifiedAt or '-'}\n")
 
     def edit_product(self):
         product_tmp = input("Add meg a termék nevét: ").lower()
