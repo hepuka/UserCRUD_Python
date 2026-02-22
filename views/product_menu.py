@@ -15,26 +15,33 @@ class ProductView(BaseMenu):
 
     def add_product(self):
         name = input("Név: ")
-        tmp = input("Kategória: (I)Ital (P)Péksütemény (K)Kávé (G)Gyümölcslé (T)Tea (S)Sütemény:")
-        category = None
+        print("Kategóriák:")
+        print("(I) Ital")
+        print("(P) Péksütemény")
+        print("(K) Kávé")
+        print("(G) Gyümölcslé")
+        print("(T) Tea")
+        print("(S) Sütemény")
+
+        category_input = input("Válassz kategóriát: ").strip().lower()
+
+        category_map = {
+            "i": "Ital",
+            "p": "Péksütemény",
+            "k": "Kávé",
+            "g": "Gyümölcslé",
+            "t": "Tea",
+            "s": "Sütemény"
+        }
+
+        category = category_map.get(category_input)
+
+        if not category:
+            print("Érvénytelen kategória!")
+            return
+
         price = input("Ár: ")
         packaging = input("Kiszerelés: ")
-
-        match tmp.lower():
-            case "i":
-                category = "Ital"
-            case "p":
-                category = "Péksütemény"
-            case "k":
-                category = "Kávé"
-            case "g":
-                category = "Gyümölcslé"
-            case "t":
-                category = "Tea"
-            case "s":
-                category = "Sütemény"
-            case _:
-                ""
 
         self.product_controller.create({
             "name": name.lower(),
