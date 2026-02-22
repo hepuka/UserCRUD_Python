@@ -7,7 +7,8 @@ class ProductView(BaseMenu):
             "2": ("Termék keresése", self.get_product),
             "3": ("Termékek listázása", self.get_products),
             "4": ("Termék adatainak módosítása", self.edit_product),
-            "5": ("Visszalépés a főmenübe", self.back_to_prev_menu),
+            "5": ("Termék törlése", self.delete_product),
+            "6": ("Visszalépés a főmenübe", self.back_to_prev_menu),
             "0": ("Kilépés", self.exit_app)
         }
 
@@ -112,7 +113,7 @@ class ProductView(BaseMenu):
         print("\n--- RÖGZÍTETT TERMÉKEK ---")
 
         for product in products:
-            print(f"Név: {product.name}")
+            print(f"Név: {product.name.capitalize()}")
             print(f"Kategória: {product.category}")
             print(f"Ár: {product.price}")
             print(f"Kiszerelés: {product.packaging}")
@@ -137,3 +138,14 @@ class ProductView(BaseMenu):
         self.product_controller.update_product(product, name.lower(), price, packaging)
         print("Termék adatai sikeresen módosítva!")
 
+    def delete_product(self):
+        product = input("Add meg a törlendő termék nevét: ")
+        tmp = input("Biztosan törölni szeretnéd a felhasználót? (I) Igen (N) Mégsem: ").lower()
+
+        if tmp == "i":
+            self.product_controller.delete("name", product)
+            print("Termék sikeresen törölve")
+            return
+        else:
+            print("Termék törlése megszakítva.")
+            return
