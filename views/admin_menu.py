@@ -14,8 +14,9 @@ class AdminMenu(BaseMenu):
             "1": ("Felhasználókezelő menü", self.navigate_to_userhandling_menu),
             "2": ("Termékmenü", self.navigate_to_product_menu),
             "3": ("Rendelések", self.orders),
-            "4": ("Jelszómódosítás", self.reset_password),
-            "5": ("Logout", self.logout),
+            "4": ("Üzleti összesítő", self.get_business_details),
+            "5": ("Jelszómódosítás", self.reset_password),
+            "6": ("Logout", self.logout),
             "0": ("Kilépés", self.exit_app)
         }
 
@@ -33,3 +34,35 @@ class AdminMenu(BaseMenu):
 
     def orders(self):
         pass
+
+    def get_business_details(self):
+        products = self.product_controller.get_all()
+        orders = None
+        income = None
+
+        # Értékek előkészítése
+        values = {
+            "Összes megrendelés": f"{orders or 0} darab",
+            "Összes bevétel": f"{income or 0} Ft",
+            "Termékek száma": f"{len(products)} darab"
+        }
+
+        print("\nÜZLETI ÖSSZESÍTŐ")
+
+        column_widths = {}
+
+        for key, value in values.items():
+            column_widths[key] = max(len(key), len(value)) + 4
+
+        header = " | ".join(
+            key.ljust(column_widths[key])
+            for key in values.keys()
+        )
+        print(header)
+        print("-" * len(header))
+
+        row = " | ".join(
+            value.ljust(column_widths[key])
+            for key, value in values.items()
+        )
+        print(row)
