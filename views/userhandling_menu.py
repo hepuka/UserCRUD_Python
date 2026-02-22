@@ -2,11 +2,25 @@ from views.base_menu import BaseMenu
 
 class UserHandlingMenu(BaseMenu):
 
+    role_map = {
+        "u": "user",
+        "a": "admin",
+    }
+
+    field_labels = {
+        "name": "Név",
+        "email": "Email",
+        "role": "Szerepkör",
+        "username": "Felhasználónév",
+        "createdAt": "Létrehozva",
+        "modifiedAt": "Módosítva"
+    }
+
     def show(self):
         menu = {
-            "1": ("Új felhasználó hozzáadása", self.add_user),
-            "2": ("Felhasználók listázása", self.get_users),
-            "3": ("Felhasználó keresése", self.get_user),
+            "1": ("Felhasználók listázása", self.get_users),
+            "2": ("Felhasználó keresése", self.get_user),
+            "3": ("Új felhasználó hozzáadása", self.add_user),
             "4": ("Felhasználó módosítása", self.edit_user),
             "5": ("Felhasználó törlése", self.delete_user),
             "6": ("Visszalépés a főmenübe", self.back_to_prev_menu),
@@ -17,11 +31,14 @@ class UserHandlingMenu(BaseMenu):
 
     def add_user(self):
         name = input("Név: ")
+        print("Szerepkörtök:")
+        print("(U) User")
+        print("(A) Admin")
+        role_input = input("Válassz szerepkört: ").strip().lower()
+        role = self.role_map.get(role_input)
         email = input("Email: ")
         username = input("Felhasználónév: ")
         password = input("Jelszó: ")
-        tmp = input("Szerepkör: (1)user (2)admin:")
-        role = "user" if tmp == "1" else "admin"
 
         self.user_controller.create({
             "name": name,
@@ -61,24 +78,30 @@ class UserHandlingMenu(BaseMenu):
             return
 
         print("\nREGISZTRÁLT FELHASZNÁLÓK")
-        print(
-            f"{'Név'.ljust(20)} | "
-            f"{'Email'.ljust(20)} | "
-            f"{'Szerepkör'.ljust(10)} | "
-            f"{'Felhasználónév'.ljust(20)} | "
-            f"{'Létrehozva'.ljust(20)} | "
-            f"{'Módosítva'.ljust(20)}"
-        )
 
-        for u in users:
-            print(
-                f"{(u.name or '').ljust(20)} | "
-                f"{(u.email or '').ljust(20)} | "
-                f"{(u.role or '').ljust(10)} | "
-                f"{(u.username or '').ljust(20)} | "
-                f"{(u.createdAt or '').ljust(20)} | "
-                f"{(u.modifiedAt or '-').ljust(20)}"
+        display_fields = users[0].get_display_fields()
+        hidden_fields = users[0].get_hidden_fields()
+
+        keys = [
+            key for key in vars(users[0]).keys()
+            if key not in hidden_fields
+        ]
+
+        width = 20
+
+        header = " | ".join(
+            display_fields.get(key, key).ljust(width)
+            for key in keys
+        )
+        print(header)
+        print("-" * len(header))
+
+        for user in users:
+            row = " | ".join(
+                str(getattr(user, key, "-") or "-").ljust(width)
+                for key in keys
             )
+            print(row)
 
     def edit_user(self):
         username = input("Add meg a felhasználónevet: ")

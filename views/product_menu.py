@@ -1,6 +1,15 @@
 from views.base_menu import BaseMenu
 class ProductView(BaseMenu):
 
+    category_map = {
+        "i": "Ital",
+        "p": "Péksütemény",
+        "k": "Kávé",
+        "g": "Gyümölcslé",
+        "t": "Tea",
+        "s": "Sütemény"
+    }
+
     def show(self):
         menu = {
             "1": ("Új termékregisztráció", self.add_product),
@@ -22,19 +31,8 @@ class ProductView(BaseMenu):
         print("(G) Gyümölcslé")
         print("(T) Tea")
         print("(S) Sütemény")
-
         category_input = input("Válassz kategóriát: ").strip().lower()
-
-        category_map = {
-            "i": "Ital",
-            "p": "Péksütemény",
-            "k": "Kávé",
-            "g": "Gyümölcslé",
-            "t": "Tea",
-            "s": "Sütemény"
-        }
-
-        category = category_map.get(category_input)
+        category = self.category_map.get(category_input)
 
         if not category:
             print("Érvénytelen kategória!")
@@ -64,19 +62,10 @@ class ProductView(BaseMenu):
 
         category_input = input("Melyik kategóriát szeretnéd megjeleníteni? ").strip().lower()
 
-        category_map = {
-            "i": "Ital",
-            "p": "Péksütemény",
-            "k": "Kávé",
-            "g": "Gyümölcslé",
-            "t": "Tea",
-            "s": "Sütemény"
-        }
-
         if category_input == "":
             products = self.product_controller.get_all()
-        elif category_input in category_map:
-            products = self.product_controller.get_by_category(category_map[category_input])
+        elif category_input in self.category_map:
+            products = self.product_controller.get_by_category(self.category_map[category_input])
         else:
             print("Érvénytelen kategória!")
             return

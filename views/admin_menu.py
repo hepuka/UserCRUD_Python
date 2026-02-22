@@ -13,8 +13,9 @@ class AdminMenu(BaseMenu):
         menu = {
             "1": ("Felhasználókezelő menü", self.navigate_to_userhandling_menu),
             "2": ("Termékmenü", self.navigate_to_product_menu),
-            "3": ("Jelszómódosítás", self.reset_password),
-            "4": ("Logout", self.logout),
+            "3": ("Rendelések", self.orders),
+            "4": ("Jelszómódosítás", self.reset_password),
+            "5": ("Logout", self.logout),
             "0": ("Kilépés", self.exit_app)
         }
 
@@ -29,3 +30,6 @@ class AdminMenu(BaseMenu):
     def navigate_to_userhandling_menu(self):
         userhandling_view = UserHandlingMenu(self.user_controller, self.product_controller)
         userhandling_view.show()
+
+    def orders(self):
+        pass
