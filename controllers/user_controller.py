@@ -6,9 +6,6 @@ class UserController(BaseController):
     def __init__(self, service):
         super().__init__(service)
 
-    def create(self, data):
-        self.service.create(data)
-
     def get_user(self, username):
         return self.service.get_by_field("username", username)
 

@@ -9,5 +9,8 @@ class BaseController:
     def get_by_field(self, field, value):
         return self.service.get_by_field(field, value)
 
+    def create(self, data):
+        self.service.create(data)
+
     def delete(self, field, value):
         self.service.delete(field, value)

@@ -22,3 +22,6 @@ class BaseService(ABC):
 
     def delete(self, field, value):
         self.repository.delete(field, value)
+
+    def get_many_by_field(self, field: str, value):
+        return self.repository.find_many_by_field(field, value)

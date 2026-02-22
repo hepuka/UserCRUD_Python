@@ -26,3 +26,7 @@ class BaseRepository(ABC):
 
     def delete(self, field: str, value):
         self.collection.delete_one({field: value})
+
+    def find_many_by_field(self, field: str, value):
+        documents = self.collection.find({field: value}, {"_id": 0})
+        return [self.model_class(doc) for doc in documents]

@@ -5,8 +5,8 @@ from views.userhandling_menu import UserHandlingMenu
 
 class AdminMenu(BaseMenu):
 
-    def __init__(self, user,user_controller):
-        super().__init__(user_controller)
+    def __init__(self, user,user_controller, product_controller):
+        super().__init__(user_controller, product_controller)
         self.logged_user = user
 
     def show(self):
@@ -22,10 +22,10 @@ class AdminMenu(BaseMenu):
         return True
 
     def navigate_to_product_menu(self):
-        product_view = ProductView(self.user_controller)
+        product_view = ProductView(self.user_controller, self.product_controller)
         product_view.show()
 
 
     def navigate_to_userhandling_menu(self):
-        userhandling_view = UserHandlingMenu(self.user_controller)
+        userhandling_view = UserHandlingMenu(self.user_controller, self.product_controller)
         userhandling_view.show()

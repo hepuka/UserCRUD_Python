@@ -2,8 +2,9 @@ import sys
 
 class BaseMenu:
 
-    def __init__(self, user_controller):
+    def __init__(self, user_controller, product_controller):
         self.user_controller = user_controller
+        self.product_controller = product_controller
 
     def run(self, menu: dict, title: str):
         while True:
