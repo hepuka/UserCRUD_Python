@@ -11,7 +11,6 @@ class ProductView(BaseMenu):
             "6": ("Visszalépés a főmenübe", self.back_to_prev_menu),
             "0": ("Kilépés", self.exit_app)
         }
-
         return self.run(menu, "TERMÉKMENÜ")
 
     def add_product(self):

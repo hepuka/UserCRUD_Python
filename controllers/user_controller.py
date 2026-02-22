@@ -9,6 +9,9 @@ class UserController(BaseController):
     def get_user(self, username):
         return self.service.get_by_field("username", username)
 
+    def get_by_email(self, email):
+        return self.service.get_by_field("email", email)
+
     def update_user(self, user, name, email, role):
         updates = {
             "name": name or user.name,

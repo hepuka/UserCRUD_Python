@@ -34,8 +34,12 @@ class UserHandlingMenu(BaseMenu):
         print("Felhasználó létrehozva!")
 
     def get_user(self):
-        username = input("Add meg a felhasználónevet: ")
-        user = self.user_controller.get_user(username)
+        search_value = input("Add meg a felhasználónevet vagy email címet: ").strip()
+
+        if "@" in search_value:
+            user = self.user_controller.get_by_email(search_value)
+        else:
+            user = self.user_controller.get_user(search_value)
 
         if not user:
             print("Felhasználó nem található!")
