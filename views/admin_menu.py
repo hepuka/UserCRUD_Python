@@ -37,31 +37,55 @@ class AdminMenu(BaseMenu):
 
     def get_business_details(self):
         products = self.product_controller.get_all()
-        orders = None
-        income = None
 
-        values = {
-            "Összes megrendelés": f"{orders or 0} darab",
-            "Összes bevétel": f"{income or 0} Ft",
-            "Termékek száma": f"{len(products)} darab"
+        orders = 0
+        income = 0
+
+        stats = {
+            "Összes megrendelés": f"{orders} db",
+            "Összes bevétel": f"{income} Ft",
+            "Termékek száma": f"{len(products)} db"
         }
 
-        print("\nÜZLETI ÖSSZESÍTŐ")
+        print("\n" + "=" * 82)
+        print("BUSINESS DASHBOARD".center(82))
+        print("=" * 82)
 
-        column_widths = {}
+        GREEN = "\033[92m"
+        RED = "\033[91m"
+        RESET = "\033[0m"
 
-        for key, value in values.items():
-            column_widths[key] = max(len(key), len(value)) + 4
+        if income > 0:
+            stats["Összes bevétel"] = GREEN + stats["Összes bevétel"] + RESET
+        else:
+            stats["Összes bevétel"] = RED + stats["Összes bevétel"] + RESET
 
-        header = " | ".join(
-            key.ljust(column_widths[key])
-            for key in values.keys()
-        )
-        print(header)
-        print("-" * len(header))
+        col_width = max(
+            max(len(key) for key in stats.keys()),
+            max(len(str(value)) for value in stats.values())
+        ) + 6
 
-        row = " | ".join(
-            value.ljust(column_widths[key])
-            for key, value in values.items()
-        )
-        print(row)
+        total_width = col_width * len(stats) + (len(stats) - 1) * 3
+
+        print("+" + "-" * (total_width + 2) + "+")
+
+        header = " | ".join(key.center(col_width) for key in stats.keys())
+        print("| " + header + " |")
+
+        print("+" + "-" * (total_width + 2) + "+")
+
+        row = " | ".join(str(value).rjust(col_width) for value in stats.values())
+        print("| " + row + " |")
+
+        print("+" + "-" * (total_width + 2) + "+")
+
+        print("\nTOP 5 TERMÉK (példa-order_qty berakni a termékekhez):")
+        top_products = products[:5]
+
+        if not top_products:
+            print("Nincs termék adat.")
+        else:
+            for i, product in enumerate(top_products, 1):
+                print(f"{i}. {product.name.capitalize()}")
+
+
