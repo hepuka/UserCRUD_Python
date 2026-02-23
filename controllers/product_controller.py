@@ -14,10 +14,9 @@ class ProductController(BaseController):
             "price": price or product.price,
             "packaging": packaging or product.packaging
         }
-        self.service.update("name", product.name, updates)
 
-        updated_product = self.get_product(product.name)
-        return updated_product
+        self.service.update("name", product.name, updates)
+        return self.get_product(updates["name"])
 
     def search_products(self, keyword):
         return self.service.find_by_name_contains(keyword)

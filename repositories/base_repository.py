@@ -23,6 +23,7 @@ class BaseRepository(ABC):
             {field: value},
             {"$set": updates}
         )
+        return result.modified_count > 0
 
     def delete(self, field: str, value):
         self.collection.delete_one({field: value})
