@@ -1,3 +1,56 @@
 View → Controller → Service → Repository
-
+------------------------------------------------
 MVC + Service layer architektúra
+------------------------------------------------
+Clean Architecture (Robert C. Martin) alapelve:
+A domain nem függhet semmitől.
+
+Rétegek befelé mutató függőséggel:
+Presentation (CLI)
+↓
+Application (Use Cases)
+↓
+Domain (Entities + Interfaces)
+↓
+Infrastructure (MongoDB, bcrypt, stb.)
+------------------------------------------------
+app/
+│
+├── domain/
+│   ├── entities/
+│   │   ├── user.py
+│   │   └── product.py
+│   │
+│   ├── repositories/
+│   │   ├── user_repository_interface.py
+│   │   └── product_repository_interface.py
+│   │
+│   └── services/
+│       └── password_hasher_interface.py
+│
+├── application/
+│   ├── use_cases/
+│   │   ├── login_user.py
+│   │   ├── create_user.py
+│   │   ├── update_product.py
+│   │   └── reset_password.py
+│
+├── infrastructure/
+│   ├── database/
+│   │   └── mongo_connection.py
+│   │
+│   ├── repositories/
+│   │   ├── mongo_user_repository.py
+│   │   └── mongo_product_repository.py
+│   │
+│   └── security/
+│       └── bcrypt_hasher.py
+│
+├── presentation/
+│   ├── cli/
+│   │   ├── main_menu.py
+│   │   └── login_view.py
+│
+└── main.py
+------------------------------------------------
+
