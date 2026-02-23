@@ -40,7 +40,6 @@ class AdminMenu(BaseMenu):
         orders = None
         income = None
 
-        # Értékek előkészítése
         values = {
             "Összes megrendelés": f"{orders or 0} darab",
             "Összes bevétel": f"{income or 0} Ft",
