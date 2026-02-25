@@ -9,7 +9,6 @@ class UserMenu(BaseMenu):
         self.logged_user = logged_user
         self.user_controller = user_controller
         self.product_controller = product_controller
-        self.product_view = ProductView(user_controller, product_controller, logged_user)
 
     def show(self):
         menu = {

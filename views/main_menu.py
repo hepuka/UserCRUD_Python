@@ -22,7 +22,3 @@ class MainMenu(BaseMenu):
 
         return menu.show()
 
-
-
-
-
