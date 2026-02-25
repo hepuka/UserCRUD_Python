@@ -7,7 +7,7 @@ class LoginView:
         while True:
             print("\n------ BEJELENTKEZÉS ------")
 
-            username = "testuser" #input("Felhasználónév: ")
+            username = "testadmin" #input("Felhasználónév: ")
             password = "12345" #input("Jelszó: ")
 
             success, user, message = self.auth_controller.login(username, password)

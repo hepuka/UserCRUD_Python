@@ -1,5 +1,4 @@
 from views.base_menu import BaseMenu
-from views.userhandling_menu import UserHandlingMenu
 
 class AdminMenu(BaseMenu):
 
