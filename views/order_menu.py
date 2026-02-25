@@ -10,6 +10,11 @@ class OrderMenu(BaseMenu):
         self.product_controller = product_controller
         self.order_controller = order_controller
 
+    status_map = {
+        "n": "Nyitott",
+        "f": "Fizetve",
+    }
+
     def show(self):
         menu = {
             "1": ("Új rendelés felvétele", self.create_order),
@@ -20,7 +25,48 @@ class OrderMenu(BaseMenu):
         return self.run(menu, "RENDELÉSEK MENÜ")
 
     def get_orders(self):
-        print("Rendelések listázása...")
+        print("\nRendelés állapota:")
+        print("(N) Nyitott")
+        print("(F) Fizetve")
+        print("(Enter) Összes")
+
+        status_input = input("Melyik rendelési állapotot szeretnéd megjeleníteni? ").strip().lower()
+
+        if status_input == "":
+            orders = self.order_controller.get_all()
+        elif status_input in self.status_map:
+            orders = self.order_controller.get_by_status(self.status_map[status_input])
+        else:
+            print("Érvénytelen státusz!")
+            return
+
+        if not orders:
+            print("\nNincs rögzített rendelés!")
+            return
+
+        print("\nRÖGZÍTETT RENDELÉSEK")
+        print(
+            f"{'Rendelés ideje'.ljust(23)}"
+            f"{'Rendelés módosítva'.ljust(23)}"
+            f"{'Asztalszám'.ljust(23)} | "
+            f"{'Rendelés állapota'.ljust(23)} | "
+            f"{'Végösszeg'.ljust(23)} | "
+            f"{'Felszolgáló azonosító'.ljust(23)}"
+        )
+
+        print("-" * 135)
+
+        for order in orders:
+            print(
+                f"{(order.createdAt or '').ljust(23)} | "
+                f"{(order.modifiedAt or '-').ljust(23)}"
+                f"{(order.table_number or '').ljust(23)} | "
+                f"{(order.status or '').ljust(23)} | "
+                f"{(order.total or '').ljust(23)} | "
+                f"{(str(order.user_id) if order.user_id else '').ljust(23)}"
+
+
+            )
 
     def create_order(self):
         if not isinstance(self.logged_user._id, ObjectId):
@@ -31,7 +77,7 @@ class OrderMenu(BaseMenu):
             "table_number": input("Asztalszám: "),
             "products": [],
             "total": 0,
-            "status": "pending",
+            "status": "nyitott",
         }
 
         self.order_controller.create(order_data)
