@@ -44,28 +44,39 @@ class OrderMenu(BaseMenu):
             print("\nNincs rögzített rendelés!")
             return
 
+        # Fejléc
         print("\nRÖGZÍTETT RENDELÉSEK")
-        print(
-            f"{'Rendelés ideje'.ljust(23)}"
-            f"{'Rendelés módosítva'.ljust(23)}"
-            f"{'Asztalszám'.ljust(23)} | "
-            f"{'Rendelés állapota'.ljust(23)} | "
-            f"{'Végösszeg'.ljust(23)} | "
-            f"{'Felszolgáló azonosító'.ljust(23)}"
+        header = (
+            f"{'Rendelés ideje'.ljust(20)} | "
+            f"{'Rendelés módosítva'.ljust(20)} | "
+            f"{'Asztalszám'.ljust(12)} | "
+            f"{'Rendelés állapota'.ljust(12)} | "
+            f"{'Végösszeg'.ljust(10)} | "
+            f"{'Felszolgáló ID'.ljust(24)} | "
+            f"Rendelés részletei"
         )
-
-        print("-" * 135)
+        print(header)
+        print("-" * 130)
 
         for order in orders:
+
+            if hasattr(order, 'products') and order.products:
+                products_str = ", ".join(
+                    f"{p.get('name', '').capitalize()} x{p.get('quantity', 0)} "
+                    f"(Ár: {p.get('unit_price', 0)} Ft, Összesen: {p.get('total_price', 0)} Ft)"
+                    for p in order.products
+                )
+            else:
+                products_str = "-"
+
             print(
-                f"{(order.createdAt or '').ljust(23)} | "
-                f"{(order.modifiedAt or '-').ljust(23)}"
-                f"{(order.table_number or '').ljust(23)} | "
-                f"{(order.status or '').ljust(23)} | "
-                f"{(order.total or '').ljust(23)} | "
-                f"{(str(order.user_id) if order.user_id else '').ljust(23)}"
-
-
+                f"{(order.createdAt or '').ljust(20)} | "
+                f"{(order.modifiedAt or '-').ljust(20)} | "
+                f"{(order.table_number or '').ljust(12)} | "
+                f"{(order.status or '').ljust(12)} | "
+                f"{(str(order.total) or '0').ljust(10)} | "
+                f"{(str(order.user_id) if order.user_id else '').ljust(24)} | "
+                f"{products_str}"
             )
 
     def create_order(self):
