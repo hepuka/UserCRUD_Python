@@ -1,5 +1,10 @@
 from views.base_menu import BaseMenu
+
 class ProductView(BaseMenu):
+
+    def __init__(self, logged_user, user_controller, product_controller):
+        super().__init__(logged_user, user_controller, product_controller)
+        self.logged_user = logged_user
 
     category_map = {
         "i": "Ital",
@@ -11,15 +16,24 @@ class ProductView(BaseMenu):
     }
 
     def show(self):
-        menu = {
-            "1": ("Új termékregisztráció", self.add_product),
-            "2": ("Termék keresése", self.get_product),
-            "3": ("Termékek listázása", self.get_products),
-            "4": ("Termék adatainak módosítása", self.edit_product),
-            "5": ("Termék törlése", self.delete_product),
-            "6": ("Visszalépés a főmenübe", self.back_to_prev_menu),
-            "0": ("Kilépés", self.exit_app)
-        }
+        if self.logged_user.role == "user":
+            menu = {
+                "1": ("Termék keresése", self.get_product),
+                "2": ("Termékek listázása", self.get_products),
+                "3": ("Visszalépés a főmenübe", self.back_to_prev_menu),
+                "0": ("Kilépés", self.exit_app)
+            }
+        else:
+            menu = {
+                "1": ("Új termékregisztráció", self.add_product),
+                "2": ("Termék keresése", self.get_product),
+                "3": ("Termékek listázása", self.get_products),
+                "4": ("Termék adatainak módosítása", self.edit_product),
+                "5": ("Termék törlése", self.delete_product),
+                "6": ("Visszalépés a főmenübe", self.back_to_prev_menu),
+                "0": ("Kilépés", self.exit_app)
+            }
+
         return self.run(menu, "TERMÉKMENÜ")
 
     def add_product(self):

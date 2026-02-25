@@ -2,7 +2,8 @@ import sys
 
 class BaseMenu:
 
-    def __init__(self, user_controller, product_controller):
+    def __init__(self,logged_user, user_controller, product_controller):
+        self.logged_user = logged_user
         self.user_controller = user_controller
         self.product_controller = product_controller
 
@@ -53,6 +54,21 @@ class BaseMenu:
     def back_to_prev_menu(self):
         print("Visszalépés az előző menübe...")
         return True
+
+    def navigate_to_order_menu(self):
+        from views.order_menu import OrderMenu
+        order_view = OrderMenu(self.logged_user,self.user_controller, self.product_controller)
+        order_view.show()
+
+    def navigate_to_product_menu(self):
+        from views.product_menu import ProductView
+        product_view = ProductView(self.logged_user, self.user_controller, self.product_controller)
+        product_view.show()
+
+    def navigate_to_userhandling_menu(self):
+        from views.userhandling_menu import UserHandlingMenu
+        userhandling_view = UserHandlingMenu(self.logged_user, self.user_controller, self.product_controller)
+        userhandling_view.show()
 
     @staticmethod
     def exit_app():

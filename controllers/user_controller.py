@@ -19,7 +19,9 @@ class UserController(BaseController):
             "role": role or user.role
         }
         self.service.update("username", user.username, updates)
-        return self.get_user(updates["username"])
+
+        updated_user = self.get_user(user.username)
+        return updated_user
 
     def reset_password(self, user, current_password, new_password, new_password_again):
         return self.service.reset_password(user, current_password, new_password, new_password_again)

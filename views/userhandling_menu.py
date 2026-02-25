@@ -1,6 +1,9 @@
 from views.base_menu import BaseMenu
 
 class UserHandlingMenu(BaseMenu):
+    def __init__(self, logged_user, user_controller, product_controller):
+        super().__init__(logged_user, user_controller, product_controller)
+        self.logged_user = logged_user
 
     role_map = {
         "u": "user",
@@ -17,15 +20,25 @@ class UserHandlingMenu(BaseMenu):
     }
 
     def show(self):
-        menu = {
-            "1": ("Felhasználók listázása", self.get_users),
-            "2": ("Felhasználó keresése", self.get_user),
-            "3": ("Új felhasználó hozzáadása", self.add_user),
-            "4": ("Felhasználó módosítása", self.edit_user),
-            "5": ("Felhasználó törlése", self.delete_user),
-            "6": ("Visszalépés a főmenübe", self.back_to_prev_menu),
-            "0": ("Kilépés", self.exit_app)
-        }
+        if self.logged_user.role == "user":
+            menu = {
+                "1": ("Saját adatok megtekintése", self.my_profile),
+                "2": ("Saját adatok módosítása", self.edit_my_profile),
+                "3": ("Jelszómódosítás", self.reset_password),
+                "4": ("Visszalépés a főmenübe", self.back_to_prev_menu),
+                "0": ("Kilépés", self.exit_app)
+            }
+        else:
+            menu = {
+                "1": ("Felhasználók listázása", self.get_users),
+                "2": ("Felhasználó keresése", self.get_user),
+                "3": ("Új felhasználó hozzáadása", self.add_user),
+                "4": ("Felhasználó módosítása", self.edit_user),
+                "5": ("Felhasználó törlése", self.delete_user),
+                "6": ("Jelszómódosítás", self.reset_password),
+                "7": ("Visszalépés a főmenübe", self.back_to_prev_menu),
+                "0": ("Kilépés", self.exit_app)
+            }
 
         return self.run(menu, "TERMÉKMENÜ")
 
@@ -138,3 +151,29 @@ class UserHandlingMenu(BaseMenu):
         else:
             print("Felhasználó törlése megszakítva.")
             return
+
+    def my_profile(self):
+        user = self.logged_user
+
+        print("\n--- Saját adatok ---")
+        print(f"Név: {user.name}")
+        print(f"Email: {user.email}")
+        print(f"Felhasználónév: {user.username}")
+        print(f"Szerepkör: {user.role}")
+        print(f"Profil létrehozva: {user.createdAt}")
+        print(f"Profil módosítva: {user.modifiedAt}")
+
+    def edit_my_profile(self):
+        user = self.logged_user
+
+        name = input(f"Név [{user.name}]: ").strip()
+        email = input(f"Email [{user.email}]: ").strip()
+
+        self.logged_user = self.user_controller.update_user(
+            user,
+            name or user.name,
+            email or user.email,
+            user.role
+        )
+
+        print("Adatok frissítve!")

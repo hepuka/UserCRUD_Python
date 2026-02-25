@@ -5,20 +5,20 @@ from views.user_menu import UserMenu
 
 class MainMenu(BaseMenu):
 
-    def __init__(self, user, user_controller, product_controller):
-        super().__init__(user_controller, product_controller)
-        self.logged_user = user
+    def __init__(self, logged_user, user_controller, product_controller):
+        super().__init__(logged_user, user_controller, product_controller)
+        self.logged_user = logged_user
         self.user_controller = user_controller
         self.product_controller = product_controller
 
-        print(f"Bejelentkezve: {user.name} ({user.role})\n")
+        print(f"Bejelentkezve: {logged_user.name} ({logged_user.role})\n")
 
     def show(self):
 
         if self.logged_user.role == "admin":
             menu = AdminMenu(self.logged_user, self.user_controller, self.product_controller)
         else:
-            menu = UserMenu(self.logged_user, self.user_controller)
+            menu = UserMenu(self.logged_user, self.user_controller, self.product_controller)
 
         return menu.show()
 
