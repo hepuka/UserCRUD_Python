@@ -1,6 +1,4 @@
 from views.base_menu import BaseMenu
-from views.product_menu import ProductView
-
 
 class UserMenu(BaseMenu):
 

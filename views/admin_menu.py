@@ -10,8 +10,8 @@ class AdminMenu(BaseMenu):
     def show(self):
         menu = {
             "1": ("Felhasználókezelő menü", self.navigate_to_userhandling_menu),
-            "2": ("Termékmenü", self.navigate_to_product_menu),
-            "3": ("Rendelések", self.navigate_to_order_menu),
+            "2": ("Termék menü", self.navigate_to_product_menu),
+            "3": ("Rendelések menü", self.navigate_to_order_menu),
             "4": ("Üzleti összesítő", self.get_business_details),
             "5": ("Jelszómódosítás", self.reset_password),
             "6": ("Kijelentkezés", self.logout),
@@ -20,11 +20,6 @@ class AdminMenu(BaseMenu):
 
         self.run(menu, "ADMIN MENÜ")
         return True
-
-
-    def navigate_to_userhandling_menu(self):
-        userhandling_view = UserHandlingMenu(self.logged_user, self.user_controller, self.product_controller)
-        userhandling_view.show()
 
     def orders(self):
         pass
