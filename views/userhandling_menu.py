@@ -1,4 +1,6 @@
 from views.base_menu import BaseMenu
+from bson import ObjectId
+import bcrypt
 
 class UserHandlingMenu(BaseMenu):
     def __init__(self, logged_user, user_controller, product_controller):
@@ -53,11 +55,14 @@ class UserHandlingMenu(BaseMenu):
         username = input("Felhasználónév: ")
         password = input("Jelszó: ")
 
+        hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
         self.user_controller.create({
+            "_id": ObjectId(),
             "name": name,
             "email": email,
             "username": username,
-            "password": password,
+            "password": hashed_pw,
             "role": role
         })
 

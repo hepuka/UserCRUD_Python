@@ -2,10 +2,11 @@ import sys
 
 class BaseMenu:
 
-    def __init__(self,logged_user, user_controller, product_controller):
+    def __init__(self,logged_user, user_controller, product_controller,order_controller):
         self.logged_user = logged_user
         self.user_controller = user_controller
         self.product_controller = product_controller
+        self.order_controller = order_controller
 
     def run(self, menu: dict, title: str):
         while True:
@@ -57,7 +58,7 @@ class BaseMenu:
 
     def navigate_to_order_menu(self):
         from views.order_menu import OrderMenu
-        order_view = OrderMenu(self.logged_user,self.user_controller, self.product_controller)
+        order_view = OrderMenu(self.logged_user,self.user_controller, self.product_controller, self.order_controller)
         order_view.show()
 
     def navigate_to_product_menu(self):

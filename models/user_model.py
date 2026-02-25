@@ -12,6 +12,7 @@ class User:
     hidden_fields = ["_id", "password"]
 
     def __init__(self, data: dict):
+        self._id = data.get("_id")
         self.name = data.get("name")
         self.email = data.get("email")
         self.username = data.get("username")
@@ -20,8 +21,12 @@ class User:
         self.createdAt = data.get("createdAt")
         self.modifiedAt = data.get("modifiedAt")
 
+    def get_id(self):
+        return self._id
+
     def to_dict(self):
         return {
+            "_id": self._id,
             "name": self.name,
             "email": self.email,
             "username": self.username,

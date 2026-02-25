@@ -7,4 +7,7 @@ class UserRepository(BaseRepository):
         super().__init__("users", User)
 
     def find_by_username(self, username):
-        return self.find_by_field("username", username)
+        data = self.collection.find_one({"username": username})
+        if not data:
+            return None
+        return User(data)
