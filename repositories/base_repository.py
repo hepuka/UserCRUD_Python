@@ -12,7 +12,7 @@ class BaseRepository(ABC):
         return [self.model_class(doc) for doc in documents]
 
     def find_by_field(self, field: str, value):
-        data = self.collection.find_one({field: value}, {"_id": 0})
+        data = self.collection.find_one({field: value})
         return self.model_class(data) if data else None
 
     def create(self, data: dict):
@@ -29,5 +29,5 @@ class BaseRepository(ABC):
         self.collection.delete_one({field: value})
 
     def find_many_by_field(self, field: str, value):
-        documents = self.collection.find({field: value}, {"_id": 0})
+        documents = self.collection.find({field: value})
         return [self.model_class(doc) for doc in documents]

@@ -63,12 +63,12 @@ class BaseMenu:
 
     def navigate_to_product_menu(self):
         from views.product_menu import ProductView
-        product_view = ProductView(self.logged_user, self.user_controller, self.product_controller)
+        product_view = ProductView(self.logged_user, self.user_controller, self.product_controller, self.order_controller)
         product_view.show()
 
     def navigate_to_userhandling_menu(self):
         from views.userhandling_menu import UserHandlingMenu
-        userhandling_view = UserHandlingMenu(self.logged_user, self.user_controller, self.product_controller)
+        userhandling_view = UserHandlingMenu(self.logged_user, self.user_controller, self.product_controller, self.order_controller)
         userhandling_view.show()
 
     @staticmethod

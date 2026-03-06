@@ -3,9 +3,12 @@ from bson import ObjectId
 import bcrypt
 
 class UserHandlingMenu(BaseMenu):
-    def __init__(self, logged_user, user_controller, product_controller):
-        super().__init__(logged_user, user_controller, product_controller)
+    def __init__(self, logged_user, user_controller, product_controller, order_controller):
+        super().__init__(logged_user, user_controller, product_controller, order_controller)
         self.logged_user = logged_user
+        self.user_controller = user_controller
+        self.product_controller = product_controller
+        self.order_controller = order_controller
 
     role_map = {
         "u": "user",

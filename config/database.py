@@ -11,8 +11,7 @@ class Database:
             return cls._db
 
         MONGO_URI = (
-            "mongodb+srv://kavezo:rkPLxRSJSpcSjeap@cluster0.q7veg.mongodb.net/"
-            "bank_app?retryWrites=true&w=majority&appName=bank_app"
+            "mongodb+srv://kavezo:rkPLxRSJSpcSjeap@cluster0.q7veg.mongodb.net/bank_app?retryWrites=true&w=majority&appName=bank_app"
         )
 
         try:
