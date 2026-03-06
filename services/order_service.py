@@ -29,3 +29,6 @@ class OrderService(BaseService):
         )
 
         return result.modified_count > 0
+
+    def close_order(self, order_id):
+        return self.repository.update_order_status(order_id, "fizetve")

@@ -24,3 +24,7 @@ class OrderController(BaseController):
 
     def add_products_to_order(self, object_id, new_products, total_to_add):
         return self.service.add_products_to_order(object_id, new_products, total_to_add)
+
+
+    def close_order(self, order_id):
+        return self.service.close_order(order_id)

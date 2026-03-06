@@ -29,7 +29,8 @@ class OrderMenu(BaseMenu):
         menu = {
             "1": ("Új rendelés felvétele", self.create_order),
             "2": ("Rendelések listázása", self.get_orders),
-            "3": ("Visszalépés a főmenübe", self.back_to_prev_menu),
+            "3": ("Rendelés zárása / Fizetés", self.close_order),
+            "4": ("Visszalépés a főmenübe", self.back_to_prev_menu),
             "0": ("Kilépés", self.exit_app)
         }
         return self.run(menu, "RENDELÉSEK MENÜ")
@@ -103,7 +104,41 @@ class OrderMenu(BaseMenu):
 
         existing_order = self.order_controller.get_open_order_by_table(tableinput)
 
-        print(existing_order)
+        if existing_order:
+            print(f"\nLEADOTT RENDELÉSEK: {existing_order.table_number}. ASZTAL:")
+
+            header = (
+                f"{'Rendelés ideje'.ljust(20)} | "
+                f"{'Rendelés módosítva'.ljust(20)} | "
+                f"{'Asztalszám'.ljust(12)} | "
+                f"{'Rendelés állapota'.ljust(20)} | "
+                f"{'Végösszeg'.ljust(10)} | "
+                f"{'Felszolgáló ID'.ljust(24)} | "
+                f"Rendelés részletei"
+            )
+            print(header)
+            print("-" * 130)
+
+            if hasattr(existing_order, 'products') and existing_order.products:
+                products_str = ", ".join(
+                    f"{p.get('name', '').capitalize()} x{p.get('quantity', 0)}"
+                    for p in existing_order.products
+                )
+            else:
+                products_str = "-"
+
+            print(
+                f"{(existing_order.createdAt or '').ljust(20)} | "
+                f"{(existing_order.modifiedAt or '-').ljust(20)} | "
+                f"{(existing_order.table_number or '').ljust(12)} | "
+                f"{(existing_order.status or '').ljust(20)} | "
+                f"{(str(existing_order.total) or '0').ljust(10)} | "
+                f"{(str(existing_order.user_id) if existing_order.user_id else '').ljust(24)} | "
+                f"{products_str}"
+            )
+
+        else:
+            print("\nNincs rögzített rendelés az asztalnál")
 
         print("\nKategóriák:")
         print("(I) Ital")
@@ -169,6 +204,8 @@ class OrderMenu(BaseMenu):
 
             selected_product = products[index]
 
+            print(f"\nVálasztott termék: {selected_product.name.capitalize()}")
+
             quantity = int(input("Mennyiség: "))
 
             if quantity <= 0:
@@ -204,8 +241,7 @@ class OrderMenu(BaseMenu):
             )
 
             if success:
-                print("\nA rendelés frissítve lett!")
-                print(f"Hozzáadott összeg: {total_to_add} Ft")
+                print("\nA rendelés sikeresen frissítve!")
             else:
                 print("A rendelés nem található!")
 
@@ -222,4 +258,34 @@ class OrderMenu(BaseMenu):
             self.order_controller.create(order_data)
 
             print("\nRendelés sikeresen létrehozva!")
-            print(f"Végösszeg: {total_to_add} Ft")
+
+    def close_order(self):
+        table_input = input("Melyik asztal rendelését szeretnéd lezárni? ").strip()
+
+        if table_input not in ["1", "2", "3", "4", "5"]:
+            print("Érvénytelen asztalszám!")
+            return
+
+        orders = self.order_controller.get_by_tablenumber(table_input)
+
+        if not orders:
+            print("\nNincs rögzített rendelés ennél az asztalnál!")
+            return
+
+        # Nyitott rendelés kiválasztása
+        open_orders = [o for o in orders if o.status.lower() == "nyitott"]
+        if not open_orders:
+            print("Nincs nyitott rendelés az asztalnál!")
+            return
+
+        for order in open_orders:
+            print(f"\nRendelés ID: {order._id}, Asztal: {order.table_number}, Összeg: {order.total} Ft")
+            confirm = input("Biztosan lezárod ezt a rendelést? (i/n): ").strip().lower()
+            if confirm == "i":
+                success = self.order_controller.close_order(order._id)
+                if success:
+                    print(f"A rendelés ({order._id}) sikeresen lezárva és fizetve!")
+                else:
+                    print("Hiba történt a rendelés lezárásakor.")
+            else:
+                print("Rendelés lezárása megszakítva.")
