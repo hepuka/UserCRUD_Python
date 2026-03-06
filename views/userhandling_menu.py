@@ -19,6 +19,7 @@ class UserHandlingMenu(BaseMenu):
         "name": "Név",
         "email": "Email",
         "role": "Szerepkör",
+        "pin": "PIN kód",
         "username": "Felhasználónév",
         "createdAt": "Létrehozva",
         "modifiedAt": "Módosítva"
@@ -54,6 +55,7 @@ class UserHandlingMenu(BaseMenu):
         print("(A) Admin")
         role_input = input("Válassz szerepkört: ").strip().lower()
         role = self.role_map.get(role_input)
+        pin = input("PIN: ")
         email = input("Email: ")
         username = input("Felhasználónév: ")
         password = input("Jelszó: ")
@@ -66,7 +68,8 @@ class UserHandlingMenu(BaseMenu):
             "email": email,
             "username": username,
             "password": hashed_pw,
-            "role": role
+            "role": role,
+            "pin": pin,
         })
 
         print("Felhasználó létrehozva!")
@@ -87,6 +90,7 @@ class UserHandlingMenu(BaseMenu):
         print(f"Név: {user.name}")
         print(f"Email: {user.email}")
         print(f"Szerepkör: {user.role}")
+        print(f"PIN: {user.pin}")
         print(f"Felhasználónév: {user.username}")
         print(f"Létrehozva: {user.createdAt}")
         print(f"Módosítva: {user.modifiedAt or '-'}")
@@ -145,7 +149,9 @@ class UserHandlingMenu(BaseMenu):
         elif role_tmp == "2":
             role = "admin"
 
-        self.user_controller.update_user(user, name, email, role)
+        pin = input(f"PIN [{user.pin}]: ").strip()
+
+        self.user_controller.update_user(user, name, email, role, pin)
         print("A felhasználó adatai sikeresen módosítva!")
 
     def delete_user(self):
@@ -168,6 +174,7 @@ class UserHandlingMenu(BaseMenu):
         print(f"Email: {user.email}")
         print(f"Felhasználónév: {user.username}")
         print(f"Szerepkör: {user.role}")
+        print(f"PIN: {user.pin}")
         print(f"Profil létrehozva: {user.createdAt}")
         print(f"Profil módosítva: {user.modifiedAt}")
 
@@ -176,12 +183,14 @@ class UserHandlingMenu(BaseMenu):
 
         name = input(f"Név [{user.name}]: ").strip()
         email = input(f"Email [{user.email}]: ").strip()
+        pin = input(f"PIN [{user.pin}]: ").strip()
 
         self.logged_user = self.user_controller.update_user(
             user,
             name or user.name,
             email or user.email,
-            user.role
+            user.role,
+            pin,
         )
 
         print("Adatok frissítve!")

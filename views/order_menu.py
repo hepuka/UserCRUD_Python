@@ -11,8 +11,8 @@ class OrderMenu(BaseMenu):
         self.order_controller = order_controller
 
     status_map = {
-        "n": "Nyitott",
-        "f": "Fizetve",
+        "n": "nyitott",
+        "f": "fizetve",
     }
 
     category_map = {
@@ -272,7 +272,6 @@ class OrderMenu(BaseMenu):
             print("\nNincs rögzített rendelés ennél az asztalnál!")
             return
 
-        # Nyitott rendelés kiválasztása
         open_orders = [o for o in orders if o.status.lower() == "nyitott"]
         if not open_orders:
             print("Nincs nyitott rendelés az asztalnál!")
@@ -282,10 +281,16 @@ class OrderMenu(BaseMenu):
             print(f"\nRendelés ID: {order._id}, Asztal: {order.table_number}, Összeg: {order.total} Ft")
             confirm = input("Biztosan lezárod ezt a rendelést? (i/n): ").strip().lower()
             if confirm == "i":
-                success = self.order_controller.close_order(order._id)
-                if success:
-                    print(f"A rendelés ({order._id}) sikeresen lezárva és fizetve!")
+                pin_input = input("Add meg a PIN kódod: ")
+
+                if pin_input != self.logged_user.pin:
+                    print("Hibás PIN kód. Tranzakció megszakítva.")
+                    return
                 else:
-                    print("Hiba történt a rendelés lezárásakor.")
+                    success = self.order_controller.close_order(order._id)
+                    if success:
+                        print(f"A rendelés ({order._id}) sikeresen lezárva és fizetve!")
+                    else:
+                        print("Hiba történt a rendelés lezárásakor.")
             else:
                 print("Rendelés lezárása megszakítva.")

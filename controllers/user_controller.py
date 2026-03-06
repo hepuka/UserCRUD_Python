@@ -12,11 +12,13 @@ class UserController(BaseController):
     def get_by_email(self, email):
         return self.service.get_by_field("email", email)
 
-    def update_user(self, user, name, email, role):
+    def update_user(self, user, name, email, role,pin):
         updates = {
             "name": name or user.name,
             "email": email or user.email,
-            "role": role or user.role
+            "role": role or user.role,
+            "pin": pin or user.pin
+
         }
         self.service.update("username", user.username, updates)
 

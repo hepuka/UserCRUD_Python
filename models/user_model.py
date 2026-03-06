@@ -4,6 +4,7 @@ class User:
         "name": "Név",
         "email": "Email",
         "role": "Szerepkör",
+        "pin":"PIN kód",
         "username": "Felhasználónév",
         "createdAt": "Létrehozva",
         "modifiedAt": "Módosítva"
@@ -18,6 +19,7 @@ class User:
         self.username = data.get("username")
         self.password = data.get("password")
         self.role = data.get("role")
+        self.pin = data.get("pin")
         self.createdAt = data.get("createdAt")
         self.modifiedAt = data.get("modifiedAt")
 
@@ -32,6 +34,7 @@ class User:
             "username": self.username,
             "password": self.password,
             "role": self.role,
+            "pin": self.pin,
             "createdAt": self.createdAt,
             "modifiedAt": self.modifiedAt
         }
