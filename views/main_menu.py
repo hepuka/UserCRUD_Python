@@ -17,7 +17,7 @@ class MainMenu(BaseMenu):
     def show(self):
 
         if self.logged_user.role == "admin":
-            menu = AdminMenu(self.logged_user, self.user_controller, self.product_controller)
+            menu = AdminMenu(self.logged_user, self.user_controller, self.product_controller, self.order_controller)
         else:
             menu = UserMenu(self.logged_user, self.user_controller, self.product_controller, self.order_controller)
 
